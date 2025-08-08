@@ -1,0 +1,44 @@
+{
+  "name": "@hyperliquid-bot/hyper-bot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup index.ts cli/index.ts --format esm --dts --outDir dist",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "cli": "tsx cli/index.ts",
+    "example:grid": "tsx examples/01-basic-grid-bot.ts",
+    "example:dca": "tsx examples/03-dca-bot.ts",
+    "example:portfolio": "tsx examples/05-portfolio-bot.ts",
+    "example:multi": "tsx examples/06-multi-strategy.ts",
+    "example:types": "tsx examples/bot-types-example.ts",
+    "examples": "echo 'Available examples:' && echo '  pnpm run example:grid' && echo '  pnpm run example:dca' && echo '  pnpm run example:portfolio' && echo '  pnpm run example:multi' && echo '  pnpm run example:types'"
+  },
+  "dependencies": {
+    "hyperliquid": "^1.7.6",
+    "dotenv": "^16.4.5",
+    "tsup": "^8.5.0",
+    "@hyperliquid-bot/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "bin": {
+    "hyperbot": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli/index.d.ts",
+      "import": "./dist/cli/index.js"
+    }
+  }
+}
