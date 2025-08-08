@@ -16,7 +16,7 @@ import {
   type GeneratedGridLevel,
   type GridGenerationResult,
   type OrderSizeResult,
-} from "@hyperliquid-bot/utils";
+} from "../../utils";
 
 interface GridStrategyConfig extends StrategyConfig {
   gridSpacing: number;
@@ -383,7 +383,9 @@ export class GridStrategy extends BaseTradingStrategy {
     this.state.totalPosition = this.gridPosition.base_position;
 
     console.log(
-      `📊 Position updated: ${this.gridPosition.base_position.toFixed(6)} base, $${this.gridPosition.quote_balance.toFixed(2)} quote`
+      `📊 Position updated: ${this.gridPosition.base_position.toFixed(
+        6
+      )} base, $${this.gridPosition.quote_balance.toFixed(2)} quote`
     );
   }
 

@@ -19,8 +19,7 @@
   "dependencies": {
     "hyperliquid": "^1.7.6",
     "dotenv": "^16.4.5",
-    "tsup": "^8.5.0",
-    "@hyperliquid-bot/utils": "workspace:*"
+    "tsup": "^8.5.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
