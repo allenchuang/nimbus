@@ -1,4 +1,4 @@
-# HyperBot - Production-Ready Automated Trading System
+# Nimbus - Production-Ready Automated Trading System
 
 [![npm version](https://badge.fury.io/js/%40hyperliquid-bot%2Fhyper-bot.svg)](https://badge.fury.io/js/%40hyperliquid-bot%2Fhyper-bot)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
@@ -10,7 +10,7 @@ A professional-grade, modular trading bot system with advanced strategies and ro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      HyperBot System                            │
+│                      Nimbus System                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────────────┐  │
 │  │ TradingBot  │    │ Strategies  │    │   Risk Management   │  │
@@ -221,7 +221,7 @@ process.on("SIGINT", async () => {
 
 ## 🎯 Bot Type Constants
 
-HyperBot now uses **type-safe constants** instead of string literals for better developer experience and fewer runtime errors.
+Nimbus now uses **type-safe constants** instead of string literals for better developer experience and fewer runtime errors.
 
 ### Import and Usage
 
@@ -636,7 +636,7 @@ case "newexchange":
 ## 📦 Package Structure
 
 ```
-packages/hyper-bot/
+nimbus/
 ├── core/                     # Core bot logic
 │   ├── TradingBot.ts        # Main bot engine
 │   ├── strategies/          # Strategy implementations
@@ -705,4 +705,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-Built with ❤️ by the HyperBot team
+Built with ❤️ by the Nimbus team
