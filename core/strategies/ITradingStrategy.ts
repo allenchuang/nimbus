@@ -4,7 +4,8 @@ import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
 
 export interface StrategyConfig {
   symbol: string;
-  investmentAmount: number;
+  investmentSize: number;
+  investmentType?: "usd" | "asset"; // Default: "usd"
   maxPosition: number;
   stopLoss?: number;
   takeProfit?: number;

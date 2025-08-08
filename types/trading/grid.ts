@@ -2,7 +2,7 @@ export interface GridConfig {
   symbol: string;
   gridSpacing: number; // Percentage spacing between grid levels (e.g., 0.5 for 0.5%)
   gridQuantity: number; // Total number of grid levels (buy + sell)
-  investmentAmount: number; // Total capital to allocate
+  investmentSize: number; // Total capital to allocate
   upperBound?: number; // Optional upper bound price
   lowerBound?: number; // Optional lower bound price
   basePrice?: number; // Base price to center the grid around

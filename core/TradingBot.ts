@@ -22,7 +22,6 @@ import {
 /**
  * TradingBot - A generic trading bot that supports multiple strategies
  *
- * This replaces the old GridBot.ts while maintaining full backward compatibility.
  * It uses the strategy pattern to support different trading algorithms:
  * - Grid trading (fully implemented)
  * - Martingale, DCA, Arbitrage, etc. (placeholders for now)
@@ -88,7 +87,7 @@ export class TradingBot extends EventEmitter {
     return {
       botType: BOT_TYPE.GRID,
       symbol: gridConfig.symbol,
-      investmentAmount: gridConfig.investmentAmount,
+      investmentSize: gridConfig.investmentSize,
       maxPosition: gridConfig.maxPosition,
       stopLoss: gridConfig.stopLoss,
       takeProfit: gridConfig.takeProfit,
@@ -179,7 +178,7 @@ export class TradingBot extends EventEmitter {
         const gridUpdate = newConfig as Partial<GridConfig>;
         strategyUpdate = {
           symbol: gridUpdate.symbol,
-          investmentAmount: gridUpdate.investmentAmount,
+          investmentSize: gridUpdate.investmentSize,
           maxPosition: gridUpdate.maxPosition,
           stopLoss: gridUpdate.stopLoss,
           takeProfit: gridUpdate.takeProfit,
@@ -226,7 +225,7 @@ export class TradingBot extends EventEmitter {
         symbol: strategyState.currentPrice ? "UNKNOWN" : "UNKNOWN",
         gridSpacing: 0.01,
         gridQuantity: 10,
-        investmentAmount: 1000,
+        investmentSize: 1000,
         maxPosition: 5000,
       },
       levels: [], // Strategy doesn't expose levels in this format

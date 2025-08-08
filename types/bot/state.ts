@@ -61,7 +61,7 @@ interface GridConfig {
   symbol: string;
   gridSpacing: number;
   gridQuantity: number;
-  investmentAmount: number;
+  investmentSize: number;
   upperBound?: number;
   lowerBound?: number;
   basePrice?: number;

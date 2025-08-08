@@ -12,7 +12,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -56,7 +55,7 @@ async function runMultiStrategyExample() {
     const gridConfig: TradingBotConfig = {
       botType: BOT_TYPE.GRID,
       symbol: "ETH",
-      investmentAmount: 1000,
+      investmentSize: 1000,
       maxPosition: 1.0,
       stopLoss: 8,
       takeProfit: 15,
@@ -72,7 +71,7 @@ async function runMultiStrategyExample() {
     const dcaConfig: TradingBotConfig = {
       botType: BOT_TYPE.DCA,
       symbol: "BTC",
-      investmentAmount: 2000,
+      investmentSize: 2000,
       maxPosition: 0.5,
       stopLoss: 15,
       metadata: {
@@ -89,7 +88,7 @@ async function runMultiStrategyExample() {
     const portfolioConfig: TradingBotConfig = {
       botType: BOT_TYPE.PORTFOLIO,
       symbol: "BTC", // Primary symbol for reporting
-      investmentAmount: 3000,
+      investmentSize: 3000,
       maxPosition: 20.0,
       stopLoss: 12,
       takeProfit: 25,
@@ -228,7 +227,7 @@ function showStrategyOverview(instances: BotInstance[]) {
     console.log(`\n${i + 1}. ${instance.name}`);
     console.log(`   Strategy: ${config.botType.toUpperCase()}`);
     console.log(`   Symbol: ${config.symbol}`);
-    console.log(`   Investment: $${config.investmentAmount}`);
+    console.log(`   Investment: $${config.investmentSize}`);
     console.log(`   Max Position: ${config.maxPosition}`);
     console.log(`   Stop Loss: ${config.stopLoss || "None"}%`);
     console.log(`   Take Profit: ${config.takeProfit || "None"}%`);
@@ -242,7 +241,9 @@ function showStrategyOverview(instances: BotInstance[]) {
       console.log(`   Order Size: $${config.metadata.order_size}`);
     } else if (config.botType === BOT_TYPE.PORTFOLIO) {
       console.log(
-        `   Assets: ${Object.keys(config.metadata.target_allocations).join(", ")}`
+        `   Assets: ${Object.keys(config.metadata.target_allocations).join(
+          ", "
+        )}`
       );
       console.log(
         `   Rebalance Threshold: ${config.metadata.rebalance_threshold * 100}%`
@@ -307,7 +308,7 @@ function setupConsolidatedMonitoring(instances: BotInstance[]) {
       .map((instance) => {
         const stats = instance.bot.getStatistics();
         const roi = stats.totalPnL
-          ? (stats.totalPnL / instance.config.investmentAmount) * 100
+          ? (stats.totalPnL / instance.config.investmentSize) * 100
           : 0;
 
         return {
@@ -323,7 +324,9 @@ function setupConsolidatedMonitoring(instances: BotInstance[]) {
     performance.forEach((perf, i) => {
       const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "📊";
       console.log(
-        `${medal} ${perf.name}: ${perf.roi.toFixed(2)}% ROI | $${perf.pnl.toFixed(2)} P&L | ${perf.trades} trades`
+        `${medal} ${perf.name}: ${perf.roi.toFixed(
+          2
+        )}% ROI | $${perf.pnl.toFixed(2)} P&L | ${perf.trades} trades`
       );
     });
 
@@ -368,7 +371,14 @@ async function keepAlive(instances: BotInstance[]): Promise<void> {
         console.log(`  Trades: ${stats.totalTrades}`);
         console.log(`  P&L: $${(stats.totalPnL || 0).toFixed(2)}`);
         console.log(
-          `  ROI: ${stats.totalPnL ? ((stats.totalPnL / instance.config.investmentAmount) * 100).toFixed(2) : "0.00"}%`
+          `  ROI: ${
+            stats.totalPnL
+              ? (
+                  (stats.totalPnL / instance.config.investmentSize) *
+                  100
+                ).toFixed(2)
+              : "0.00"
+          }%`
         );
 
         totalPnL += stats.totalPnL || 0;
@@ -423,7 +433,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runMultiStrategyExample().catch(console.error);
 }
 

@@ -1,6 +1,7 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
 import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
+import { calculatePortfolioOrderSize } from "../../utils/trading/OrderSizeCalculator";
 
 // Local type definitions to match our MVP schema
 type PortfolioBotMetadata = {
@@ -222,7 +223,7 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     }
 
     // Calculate initial portfolio value (assuming all cash)
-    this.portfolioPosition.total_portfolio_value = this.config.investmentAmount;
+    this.portfolioPosition.total_portfolio_value = this.config.investmentSize;
 
     // Validate portfolio configuration
     this.validateConfiguration();
@@ -303,8 +304,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     const asset = this.portfolioPosition.assets[fill.symbol];
     if (!asset) return;
 
+    const usdValue = (fill.size * fill.price).toFixed(2);
     console.log(
-      `📈 Portfolio order filled: ${fill.side} ${fill.size} ${fill.symbol} @ $${fill.price}`
+      `📈 Portfolio order filled: ${fill.side} (${fill.size} ${fill.symbol} / $${usdValue} USD) @ $${fill.price}`
     );
 
     // Update asset position
@@ -542,9 +544,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
           console.log(
             `📝 Placing rebalance order: ${
               order.side
-            } ${order.target_amount.toFixed(6)} ${
+            } (${order.target_amount.toFixed(6)} ${
               order.symbol
-            } (~$${order.estimated_usd_value.toFixed(2)})`
+            } / $${order.estimated_usd_value.toFixed(2)} USD)`
           );
 
           const orderResponse = await this.exchange.placeOrder(orderRequest);
@@ -561,7 +563,13 @@ export class PortfolioStrategy extends BaseTradingStrategy {
             console.log(`✅ Rebalance order placed: ${orderResponse.orderId}`);
           } else {
             console.error(
-              `❌ Failed to place rebalance order for ${order.symbol}: ${orderResponse.error}`
+              `❌ Failed to place rebalance order: ${
+                order.side
+              } (${order.target_amount.toFixed(6)} ${
+                order.symbol
+              } / $${order.estimated_usd_value.toFixed(2)} USD) - ${
+                orderResponse.error
+              }`
             );
           }
         } catch (error) {
@@ -620,7 +628,18 @@ export class PortfolioStrategy extends BaseTradingStrategy {
       }
 
       const side: "buy" | "sell" = difference > 0 ? "buy" : "sell";
-      const targetAmount = Math.abs(difference) / asset.current_price;
+
+      // Use proper order size calculation for better precision and logging
+      const orderSizeResult = calculatePortfolioOrderSize(
+        Math.abs(difference),
+        asset.current_price,
+        symbol
+      );
+      const targetAmount = orderSizeResult.orderSize;
+
+      console.log(
+        `📏 Portfolio rebalance ${symbol}: ${orderSizeResult.calculationDetails}`
+      );
 
       orders.push({
         symbol,
@@ -664,7 +683,7 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     const position = this.portfolioPosition;
 
     // Calculate portfolio performance metrics
-    const initialValue = this.config.investmentAmount;
+    const initialValue = this.config.investmentSize;
     const currentValue = position.total_portfolio_value;
     const totalReturn = currentValue - initialValue;
     const totalReturnPercent =

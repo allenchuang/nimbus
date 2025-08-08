@@ -71,7 +71,7 @@ export class GridStrategy extends BaseTradingStrategy {
 
     this.gridPosition = {
       base_position: 0,
-      quote_balance: config.investmentAmount,
+      quote_balance: config.investmentSize,
       nearest_index: 0,
       grid_levels: [],
       active_orders: new Map(),
@@ -186,8 +186,9 @@ export class GridStrategy extends BaseTradingStrategy {
     }
 
     console.log(`\n🎯 ===== GRID ORDER FILL PROCESSING START =====`);
+    const usdValue = (fill.size * fill.price).toFixed(2);
     console.log(
-      `Fill: ${fill.side} ${fill.size} @ $${fill.price} (ID: ${fill.orderId})`
+      `Fill: ${fill.side} (${fill.size} ${this.config.symbol} / $${usdValue} USD) @ $${fill.price} (ID: ${fill.orderId})`
     );
 
     try {
@@ -221,20 +222,10 @@ export class GridStrategy extends BaseTradingStrategy {
     console.log("📊 Generating grid levels using shared utility...");
 
     try {
-      // Convert to the format expected by the utility
-      const utilConfig = {
-        symbol: this.config.symbol,
-        gridSpacing: this.gridConfig.gridSpacing,
-        gridQuantity: this.gridConfig.gridQuantity,
-        investmentAmount: this.config.investmentAmount,
-        maxPosition: this.config.maxPosition,
-        upperBound: this.gridConfig.upperBound,
-        lowerBound: this.gridConfig.lowerBound,
-        gridMode: this.gridConfig.gridMode,
-        activeLevels: this.gridConfig.activeLevels,
-      };
-
-      this.gridGenerationResult = generateGridLevels(utilConfig, currentPrice);
+      this.gridGenerationResult = generateGridLevels(
+        this.gridConfig,
+        currentPrice
+      );
       this.gridPosition.grid_levels = this.gridGenerationResult.levels;
       this.gridPosition.nearest_index = this.gridGenerationResult.nearestIndex;
 
@@ -256,7 +247,7 @@ export class GridStrategy extends BaseTradingStrategy {
       symbol: this.config.symbol,
       gridSpacing: this.gridConfig.gridSpacing,
       gridQuantity: this.gridConfig.gridQuantity,
-      investmentAmount: this.config.investmentAmount,
+      investmentSize: this.config.investmentSize,
       maxPosition: this.config.maxPosition,
       upperBound: this.gridConfig.upperBound,
       lowerBound: this.gridConfig.lowerBound,
@@ -282,12 +273,22 @@ export class GridStrategy extends BaseTradingStrategy {
       `📋 Placing ${activeBuyLevels.length} buy + ${activeSellLevels.length} sell = ${allLevels.length} total orders`
     );
 
-    await this.placeOrdersForLevels(allLevels);
+    const successfulOrders = await this.placeOrdersForLevels(allLevels);
+
+    if (successfulOrders === 0) {
+      throw new Error(
+        `❌ Failed to place any initial grid orders. All ${allLevels.length} orders failed. Check minimum order value requirements.`
+      );
+    }
+
+    console.log(
+      `✅ Successfully placed ${successfulOrders}/${allLevels.length} initial grid orders`
+    );
   }
 
   private async placeOrdersForLevels(
     levels: Array<{ index: number; price: number; side: "buy" | "sell" }>
-  ): Promise<void> {
+  ): Promise<number> {
     if (levels.length > 10) {
       console.error(
         `❌ SAFETY: Attempting to place ${levels.length} orders, limiting to 10`
@@ -297,11 +298,23 @@ export class GridStrategy extends BaseTradingStrategy {
 
     if (levels.length === 0) {
       console.log("⚠️ No orders to place");
-      return;
+      return 0;
     }
 
-    const orderSize = this.roundSize(
-      this.config.investmentAmount / this.gridConfig.gridQuantity
+    // Calculate proper order size using current price
+    const currentPrice = await this.exchange.getCurrentPrice(
+      this.config.symbol
+    );
+    const orderSizeResult = calculateGridOrderSize(
+      this.config.investmentSize,
+      this.gridConfig.gridQuantity,
+      currentPrice,
+      this.config.symbol
+    );
+    const orderSize = orderSizeResult.orderSize;
+
+    console.log(
+      `📏 Order size calculation: ${orderSizeResult.calculationDetails}`
     );
 
     const orderRequests = levels.map((level) => ({
@@ -331,13 +344,15 @@ export class GridStrategy extends BaseTradingStrategy {
           });
 
           successfulPlacements++;
+          const usdValue = (request.size * request.price).toFixed(2);
           console.log(
-            `✅ BULK: ${request.side} ${request.size} @ $${request.price} (ID: ${resp.orderId})`
+            `✅ BULK: ${request.side} (${request.size} ${this.config.symbol} / $${usdValue} USD) @ $${request.price} (ID: ${resp.orderId})`
           );
         } else {
           const errorMsg = resp?.error || "Unknown error";
+          const usdValue = (request.size * request.price).toFixed(2);
           console.error(
-            `❌ BULK: Failed ${request.side} @ $${request.price} - ${errorMsg}`
+            `❌ BULK: Failed ${request.side} (${request.size} ${this.config.symbol} / $${usdValue} USD) @ $${request.price} - ${errorMsg}`
           );
         }
       });
@@ -345,6 +360,7 @@ export class GridStrategy extends BaseTradingStrategy {
       console.log(
         `✅ BULK PLACEMENT COMPLETED: ${successfulPlacements}/${orderRequests.length} orders placed successfully`
       );
+      return successfulPlacements;
     } catch (error) {
       console.error("❌ Error in bulk order placement:", error);
       throw error;
@@ -425,7 +441,7 @@ export class GridStrategy extends BaseTradingStrategy {
       symbol: this.config.symbol,
       gridSpacing: this.gridConfig.gridSpacing,
       gridQuantity: this.gridConfig.gridQuantity,
-      investmentAmount: this.config.investmentAmount,
+      investmentSize: this.config.investmentSize,
       maxPosition: this.config.maxPosition,
       upperBound: this.gridConfig.upperBound,
       lowerBound: this.gridConfig.lowerBound,
@@ -533,7 +549,7 @@ export class GridStrategy extends BaseTradingStrategy {
     const szDecimals = this.assetMetadata?.szDecimals || 4;
 
     const result = calculateGridOrderSize(
-      this.config.investmentAmount,
+      this.config.investmentSize,
       this.gridConfig.gridQuantity,
       this.state.currentPrice,
       this.config.symbol,

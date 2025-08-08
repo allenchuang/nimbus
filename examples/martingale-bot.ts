@@ -14,7 +14,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -51,7 +50,7 @@ async function runMartingaleBot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.MARTINGALE,
       symbol: "ETH", // Trading ETH-PERP
-      investmentAmount: 500, // $500 total budget (SMALL amount for testing)
+      investmentSize: 500, // $500 total budget (SMALL amount for testing)
       maxPosition: 2.0, // Maximum 2 ETH total exposure
       stopLoss: 25, // 25% portfolio stop loss (CRITICAL for risk management)
       metadata: {
@@ -249,7 +248,7 @@ function showRiskWarning(config: TradingBotConfig) {
   console.log("⚠️".repeat(20));
   console.log("\n📋 Configuration Summary:");
   console.log(`   Symbol: ${config.symbol}`);
-  console.log(`   Total budget: $${config.investmentAmount}`);
+  console.log(`   Total budget: $${config.investmentSize}`);
   console.log(`   Base order: $${config.metadata.base_order_size}`);
   console.log(`   Max orders: ${config.metadata.max_orders}`);
   console.log(`   Step multiplier: ${config.metadata.step_multiplier}x`);
@@ -365,7 +364,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runMartingaleBot().catch(console.error);
 }
 

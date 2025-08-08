@@ -15,7 +15,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -53,7 +52,7 @@ async function runAdvancedGridBot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.GRID,
       symbol: "SOL", // Trading SOL-PERP for higher volatility
-      investmentAmount: 2500, // $2500 USD total investment
+      investmentSize: 2500, // $2500 USD total investment
       maxPosition: 5.0, // Maximum 5 SOL position
       stopLoss: 12, // 12% stop loss
       takeProfit: 25, // 25% take profit
@@ -291,7 +290,7 @@ function showAdvancedConfig(config: TradingBotConfig) {
   console.log("\n⚡ Advanced Grid Configuration:");
   console.log("===============================");
   console.log(`   Symbol: ${config.symbol}`);
-  console.log(`   Investment: $${config.investmentAmount}`);
+  console.log(`   Investment: $${config.investmentSize}`);
   console.log(
     `   Grid mode: ${config.metadata.gridMode} (${config.metadata.gridQuantity} levels)`
   );
@@ -390,7 +389,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runAdvancedGridBot().catch(console.error);
 }
 

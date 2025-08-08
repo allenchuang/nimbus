@@ -1,6 +1,7 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
 import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
+import { calculateMartingaleOrderSize } from "../../utils/trading/OrderSizeCalculator";
 
 // Local type definitions to match our MVP schema
 type MartingaleBotMetadata = {
@@ -213,8 +214,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
   async handleOrderFill(fill: OrderFill | HyperliquidOrderFill): Promise<void> {
     if (!this.isRunning || fill.symbol !== this.config.symbol) return;
 
+    const usdValue = (fill.size * fill.price).toFixed(2);
     console.log(
-      `📈 Martingale order filled: ${fill.side} ${fill.size} ${this.config.symbol} @ $${fill.price}`
+      `📈 Martingale order filled: ${fill.side} (${fill.size} ${this.config.symbol} / $${usdValue} USD) @ $${fill.price}`
     );
 
     // Update position tracking
@@ -258,8 +260,7 @@ export class MartingaleStrategy extends BaseTradingStrategy {
     // Calculate total potential investment
     const totalPotentialInvestment = this.calculateTotalPotentialInvestment();
     const maxPositionValue =
-      this.config.investmentAmount *
-      config.safety_controls.max_position_multiple;
+      this.config.investmentSize * config.safety_controls.max_position_multiple;
 
     if (totalPotentialInvestment > maxPositionValue) {
       console.warn(
@@ -360,12 +361,17 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
       const orderNumber = this.martingalePosition.orders.length + 1;
       const orderSizeUSD = this.martingalePosition.next_order_size;
-      const orderSize = orderSizeUSD / currentPrice;
+
+      // Use proper order size calculation
+      const orderSizeResult = calculateMartingaleOrderSize(
+        orderSizeUSD,
+        currentPrice,
+        this.config.symbol
+      );
+      const orderSize = orderSizeResult.orderSize;
 
       console.log(
-        `📝 Placing Martingale order #${orderNumber}: $${orderSizeUSD} (${orderSize.toFixed(
-          6
-        )} ${this.config.symbol})`
+        `📝 Placing Martingale order #${orderNumber}: ${orderSizeResult.calculationDetails}`
       );
 
       const orderRequest: OrderRequest = {
@@ -407,7 +413,11 @@ export class MartingaleStrategy extends BaseTradingStrategy {
         });
       } else {
         console.error(
-          `❌ Failed to place Martingale order: ${orderResponse.error}`
+          `❌ Failed to place Martingale order #${orderNumber}: (${orderSize.toFixed(
+            6
+          )} ${this.config.symbol} / $${orderSizeUSD.toFixed(2)} USD) - ${
+            orderResponse.error
+          }`
         );
         this.emit("orderError", { error: orderResponse.error });
       }
@@ -490,7 +500,16 @@ export class MartingaleStrategy extends BaseTradingStrategy {
           exitPrice: currentPrice,
         });
       } else {
-        console.error(`❌ Failed to place exit order: ${orderResponse.error}`);
+        const usdValue = (
+          this.martingalePosition.total_position * currentPrice
+        ).toFixed(2);
+        console.error(
+          `❌ Failed to place exit order: sell (${this.martingalePosition.total_position.toFixed(
+            6
+          )} ${this.config.symbol} / $${usdValue} USD) @ $${currentPrice} - ${
+            orderResponse.error
+          }`
+        );
         this.emit("orderError", { error: orderResponse.error });
       }
     } catch (error) {
@@ -517,8 +536,7 @@ export class MartingaleStrategy extends BaseTradingStrategy {
     const nextOrderValue = position.next_order_size;
     const totalPotentialInvestment = position.total_invested + nextOrderValue;
     const maxInvestment =
-      this.config.investmentAmount *
-      config.safety_controls.max_position_multiple;
+      this.config.investmentSize * config.safety_controls.max_position_multiple;
 
     if (totalPotentialInvestment > maxInvestment) {
       console.log(

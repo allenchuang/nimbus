@@ -12,7 +12,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -47,7 +46,7 @@ async function runPortfolioBot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.PORTFOLIO,
       symbol: "BTC", // Primary symbol for reporting
-      investmentAmount: 5000, // $5000 total portfolio
+      investmentSize: 5000, // $5000 total portfolio
       maxPosition: 50.0, // Maximum total position
       stopLoss: 20, // 20% portfolio stop loss
       takeProfit: 50, // 50% portfolio take profit
@@ -131,7 +130,9 @@ function setupEventListeners(bot: TradingBot) {
 
     rebalance.actions.forEach((action: any, i: number) => {
       console.log(
-        `   ${i + 1}. ${action.type} ${action.amount} ${action.asset} at $${action.price}`
+        `   ${i + 1}. ${action.type} ${action.amount} ${action.asset} at $${
+          action.price
+        }`
       );
     });
 
@@ -295,7 +296,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runPortfolioBot().catch(console.error);
 }
 

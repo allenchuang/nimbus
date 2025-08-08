@@ -5,6 +5,11 @@ export type { BasicRiskManagement, AdvancedRiskManagement } from "./risk";
 export type {
   ExchangeFactoryConfig,
   SupportedExchange,
-  OrderSizeConfig,
+  BaseOrderSizeConfig,
+  StrategyOrderSizeConfig,
+  GridOrderSizeConfig,
+  DCAOrderSizeConfig,
+  MartingaleOrderSizeConfig,
+  PortfolioOrderSizeConfig,
   OrderSizeResult,
 } from "./common";

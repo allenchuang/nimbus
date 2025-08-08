@@ -14,8 +14,12 @@ export {
 
 // Trading utilities
 export {
-  calculateOrderSize,
+  convertUSDToAsset,
+  createOrderSizeConfig,
   calculateGridOrderSize,
+  calculateDCAOrderSize,
   calculateMartingaleOrderSize,
+  calculatePortfolioOrderSize,
+  calculatePercentageOrderSize,
   roundToDecimals,
 } from "./trading/OrderSizeCalculator";

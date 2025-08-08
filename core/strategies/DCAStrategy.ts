@@ -1,6 +1,10 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
 import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
+import {
+  calculateDCAOrderSize,
+  roundToDecimals,
+} from "../../utils/trading/OrderSizeCalculator";
 // Import types from the workspace
 type DCABotMetadata = {
   interval_hours: number;
@@ -189,8 +193,9 @@ export class DCAStrategy extends BaseTradingStrategy {
   async handleOrderFill(fill: OrderFill | HyperliquidOrderFill): Promise<void> {
     if (!this.isRunning || fill.symbol !== this.config.symbol) return;
 
+    const usdValue = (fill.size * fill.price).toFixed(2);
     console.log(
-      `📈 DCA order filled: ${fill.side} ${fill.size} ${this.config.symbol} @ $${fill.price}`
+      `📈 DCA order filled: ${fill.side} (${fill.size} ${this.config.symbol} / $${usdValue} USD) @ $${fill.price}`
     );
 
     // Update position tracking
@@ -308,8 +313,9 @@ export class DCAStrategy extends BaseTradingStrategy {
         price: currentPrice, // Required even for market orders
       };
 
+      const usdValue = (orderRequest.size * currentPrice).toFixed(2);
       console.log(
-        `📝 Placing DCA order: ${orderRequest.side} ${orderRequest.size} ${this.config.symbol} @ market price (~$${currentPrice})`
+        `📝 Placing DCA order: ${orderRequest.side} (${orderRequest.size} ${this.config.symbol} / $${usdValue} USD) @ market price (~$${currentPrice})`
       );
 
       const orderResponse = await this.exchange.placeOrder(orderRequest);
@@ -336,7 +342,12 @@ export class DCAStrategy extends BaseTradingStrategy {
 
         this.emit("orderPlaced", { order: dcaOrder, orderResponse });
       } else {
-        console.error(`❌ Failed to place DCA order: ${orderResponse.error}`);
+        const usdValue = (orderSize * currentPrice).toFixed(2);
+        console.error(
+          `❌ Failed to place DCA order: (${orderSize.toFixed(6)} ${
+            this.config.symbol
+          } / $${usdValue} USD) - ${orderResponse.error}`
+        );
         this.emit("orderError", { error: orderResponse.error });
       }
     } catch (error) {
@@ -379,17 +390,36 @@ export class DCAStrategy extends BaseTradingStrategy {
   }
 
   private calculateOrderSize(currentPrice: number): number {
-    // MVP: Use fixed order size with min/max validation
-    let orderSize = this.dcaConfig.order_size / currentPrice; // Convert USD to asset size
+    // Use proper DCA order size calculation
+    const orderSizeResult = calculateDCAOrderSize(
+      this.dcaConfig.order_size,
+      currentPrice,
+      this.config.symbol
+    );
 
-    const minSize = this.dcaConfig.min_order_size / currentPrice;
-    const maxSize = this.dcaConfig.max_order_size / currentPrice;
+    let orderSize = orderSizeResult.orderSize;
+
+    // Apply min/max validation using the same utility
+    const minSizeResult = calculateDCAOrderSize(
+      this.dcaConfig.min_order_size,
+      currentPrice,
+      this.config.symbol
+    );
+    const maxSizeResult = calculateDCAOrderSize(
+      this.dcaConfig.max_order_size,
+      currentPrice,
+      this.config.symbol
+    );
 
     // Ensure within bounds
-    orderSize = Math.max(minSize, Math.min(maxSize, orderSize));
+    orderSize = Math.max(
+      minSizeResult.orderSize,
+      Math.min(maxSizeResult.orderSize, orderSize)
+    );
 
-    // Round to reasonable precision (6 decimal places)
-    return Math.round(orderSize * 1000000) / 1000000;
+    console.log(`📏 DCA order size: ${orderSizeResult.calculationDetails}`);
+
+    return orderSize;
   }
 
   private updateDCAPosition(fill: OrderFill | HyperliquidOrderFill): void {

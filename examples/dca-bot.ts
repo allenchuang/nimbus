@@ -12,7 +12,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -47,7 +46,7 @@ async function runDCABot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.DCA,
       symbol: "BTC", // DCA into Bitcoin
-      investmentAmount: 1000, // $1000 total budget
+      investmentSize: 1000, // $1000 total budget
       maxPosition: 1.0, // Maximum 1 BTC position
       stopLoss: 15, // 15% stop loss (optional for DCA)
       metadata: {
@@ -232,7 +231,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runDCABot().catch(console.error);
 }
 

@@ -179,7 +179,9 @@ class HyperBotCLI {
     this.config.exchange.testnet = !testnet.toLowerCase().startsWith("n");
 
     console.log(
-      `✅ Exchange configured: ${selectedExchange} (${this.config.exchange.testnet ? "testnet" : "mainnet"})`
+      `✅ Exchange configured: ${selectedExchange} (${
+        this.config.exchange.testnet ? "testnet" : "mainnet"
+      })`
     );
   }
 
@@ -225,7 +227,7 @@ class HyperBotCLI {
 
     // Basic bot config
     const symbol = await this.prompt("Trading symbol (e.g., BTC, ETH): ");
-    const investmentAmount = parseFloat(
+    const investmentSize = parseFloat(
       await this.prompt("Investment amount (USD): ")
     );
     const maxPosition = parseFloat(
@@ -235,7 +237,7 @@ class HyperBotCLI {
     this.config.bot = {
       botType: selectedStrategy.type as BotType,
       symbol: symbol.trim().toUpperCase(),
-      investmentAmount,
+      investmentSize,
       maxPosition,
       metadata: {},
     };
@@ -369,7 +371,9 @@ class HyperBotCLI {
         assets[asset.toUpperCase()] = allocation;
         totalAllocation += allocation;
         console.log(
-          `Added ${asset}: ${(allocation * 100).toFixed(1)}% (Total: ${(totalAllocation * 100).toFixed(1)}%)`
+          `Added ${asset}: ${(allocation * 100).toFixed(1)}% (Total: ${(
+            totalAllocation * 100
+          ).toFixed(1)}%)`
         );
       } else {
         console.log("❌ Invalid allocation or would exceed 100%");
@@ -532,7 +536,9 @@ class HyperBotCLI {
     setInterval(() => {
       const stats = bot.getStatistics();
       console.log(
-        `\n📊 Stats: ${stats.totalTrades} trades | $${(stats.totalPnL || 0).toFixed(2)} P&L\n`
+        `\n📊 Stats: ${stats.totalTrades} trades | $${(
+          stats.totalPnL || 0
+        ).toFixed(2)} P&L\n`
       );
     }, 300000); // Every 5 minutes
   }
@@ -604,8 +610,8 @@ class HyperBotCLI {
 
     if (!this.config.bot.symbol) errors.push("Missing trading symbol");
     if (
-      !this.config.bot.investmentAmount ||
-      this.config.bot.investmentAmount <= 0
+      !this.config.bot.investmentSize ||
+      this.config.bot.investmentSize <= 0
     ) {
       errors.push("Invalid investment amount");
     }

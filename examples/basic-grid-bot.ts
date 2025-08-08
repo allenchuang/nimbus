@@ -11,7 +11,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -49,7 +48,7 @@ async function runBasicGridBot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.GRID,
       symbol: "ETH", // Trading ETH-PERP
-      investmentAmount: 100, // $100 USD total investment
+      investmentSize: 200, // $100 USD total investment
       maxPosition: 0.1, // Maximum 0.1 ETH position
       stopLoss: 5, // 5% stop loss
       takeProfit: 10, // 10% take profit
@@ -108,12 +107,17 @@ function setupEventListeners(bot: TradingBot) {
   // Trading events
   bot.on("orderPlaced", (order: any) => {
     console.log(
-      `📝 Order placed: ${order.side} ${order.size} at $${order.price}`
+      `📝 Order placed: ${order.side} (${order.size} ETH / $${(
+        order.size * order.price
+      ).toFixed(2)} USD) at $${order.price}`
     );
   });
 
   bot.on("orderFilled", (fill: any) => {
-    console.log(`✅ Order filled: ${fill.side} ${fill.size} at $${fill.price}`);
+    const usdValue = (fill.size * fill.price).toFixed(2);
+    console.log(
+      `✅ Order filled: ${fill.side} (${fill.size} ETH / $${usdValue} USD) at $${fill.price}`
+    );
     console.log(`💰 P&L: $${fill.pnl || "N/A"}`);
   });
 
@@ -191,7 +195,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runBasicGridBot().catch(console.error);
 }
 

@@ -12,7 +12,6 @@ import { config } from "dotenv";
 import {
   TradingBot,
   ExchangeFactory,
-  BotType,
   BOT_TYPE,
   TradingBotConfig,
 } from "../index.js";
@@ -58,7 +57,7 @@ async function runCustomStrategyBot() {
     const config: TradingBotConfig = {
       botType: BOT_TYPE.SIGNAL, // Using signal strategy type for custom logic
       symbol: "AVAX", // Trading AVAX-PERP
-      investmentAmount: 1500, // $1500 total investment
+      investmentSize: 1500, // $1500 total investment
       maxPosition: 10.0, // Maximum 10 AVAX position
       stopLoss: 8, // 8% stop loss
       takeProfit: 12, // 12% take profit
@@ -359,7 +358,7 @@ function showCustomStrategyConfig(config: TradingBotConfig) {
     `   Strategy: ${config.metadata.strategy_name} v${config.metadata.strategy_version}`
   );
   console.log(`   Symbol: ${config.symbol}`);
-  console.log(`   Investment: $${config.investmentAmount}`);
+  console.log(`   Investment: $${config.investmentSize}`);
   console.log("");
 
   console.log("📊 Technical Indicators:");
@@ -509,7 +508,7 @@ console.log(`
 `);
 
 // Run the example
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runCustomStrategyBot().catch(console.error);
 }
 

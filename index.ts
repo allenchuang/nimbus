@@ -2,13 +2,12 @@
 export { TradingBot, GridBot } from "./core/TradingBot"; // GridBot is an alias for backward compatibility
 
 // Strategy system
-export {
-  StrategyFactory,
+export { StrategyFactory, BOT_TYPE } from "./core/strategies/StrategyFactory";
+export type {
   BotType,
-  BOT_TYPE,
   TradingBotConfig,
 } from "./core/strategies/StrategyFactory";
-export {
+export type {
   ITradingStrategy,
   StrategyConfig,
   StrategyState,
@@ -24,14 +23,12 @@ export { PortfolioStrategy } from "./core/strategies/PortfolioStrategy";
 export type * from "./types";
 
 // Exchange implementations
-export {
-  HyperliquidExchange,
-  HyperliquidConfig,
-} from "./exchanges/HyperliquidExchange";
+export { HyperliquidExchange } from "./exchanges/HyperliquidExchange";
+export type { HyperliquidConfig } from "./exchanges/HyperliquidExchange";
 
 // Factory for creating exchanges
-export {
-  ExchangeFactory,
+export { ExchangeFactory } from "./factories/ExchangeFactory";
+export type {
   SupportedExchange,
   ExchangeFactoryConfig,
 } from "./factories/ExchangeFactory";

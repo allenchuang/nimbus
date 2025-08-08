@@ -181,10 +181,10 @@ export class GridLevelManager {
 
     if (investmentType === "usd") {
       // Convert USD investment to base asset using current price
-      totalBaseAmount = this.config.investmentAmount / currentPrice;
+      totalBaseAmount = this.config.investmentSize / currentPrice;
     } else {
       // Investment amount is already in base asset
-      totalBaseAmount = this.config.investmentAmount;
+      totalBaseAmount = this.config.investmentSize;
     }
 
     // Calculate order size per grid level

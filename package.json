@@ -9,12 +9,13 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "cli": "tsx cli/index.ts",
-    "example:grid": "tsx examples/01-basic-grid-bot.ts",
-    "example:dca": "tsx examples/03-dca-bot.ts",
-    "example:portfolio": "tsx examples/05-portfolio-bot.ts",
-    "example:multi": "tsx examples/06-multi-strategy.ts",
-    "example:types": "tsx examples/bot-types-example.ts",
-    "examples": "echo 'Available examples:' && echo '  pnpm run example:grid' && echo '  pnpm run example:dca' && echo '  pnpm run example:portfolio' && echo '  pnpm run example:multi' && echo '  pnpm run example:types'"
+    "example:basic-grid": "tsx examples/basic-grid-bot.ts",
+    "example:advanced-grid": "tsx examples/advanced-grid-bot.ts",
+    "example:dca": "tsx examples/dca-bot.ts",
+    "example:martingale": "tsx examples/martingale-bot.ts",
+    "example:portfolio": "tsx examples/portfolio-bot.ts",
+    "example:multi": "tsx examples/multi-strategy.ts",
+    "example:custom": "tsx examples/custom-strategy.ts"
   },
   "dependencies": {
     "hyperliquid": "^1.7.6",
