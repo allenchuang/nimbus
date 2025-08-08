@@ -405,7 +405,7 @@ async function keepAlive(instances: BotInstance[]): Promise<void> {
 // Show startup banner
 console.log(`
 ╔═══════════════════════════════════════╗
-║           HyperBot v1.0.0             ║
+║           Nimbus v1.0.0               ║
 ║        Multi-Strategy Example         ║
 ║     "Diversification is the only      ║
 ║         free lunch in finance"        ║

@@ -1,4 +1,4 @@
-# HyperBot Quick Start Guide
+# Nimbus Quick Start Guide
 
 Get your trading bot up and running in under 5 minutes! 🚀
 

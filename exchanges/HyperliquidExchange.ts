@@ -406,19 +406,38 @@ export class HyperliquidExchange extends EventEmitter implements IExchange {
         is_buy: request.side === "buy",
         sz: request.size,
         limit_px: request.price,
-        order_type: { limit: { tif: "Gtc" } },
+        ...(request.type === "market"
+          ? { order_type: { trigger: { isMarket: true } } }
+          : { order_type: { limit: { tif: "Gtc" } } }),
         reduce_only: request.reduceOnly || false,
       });
 
-      const response = await this.sdk.exchange.placeOrder({
+      // Construct the order object according to the expected type
+      let order: any = {
         coin: normalizedSymbol,
         is_buy: request.side === "buy",
         sz: request.size,
         limit_px: request.price,
-        //! WARNING: in order to prevent "Only post-only orders allowed immediately after network upgrade", need to use "Alo" - Adding liquidity only (Post Order)
-        order_type: { limit: { tif: "Gtc" } },
         reduce_only: request.reduceOnly || false,
-      });
+      };
+
+      if (request.type === "market") {
+        // For market orders, Hyperliquid expects a trigger order with required fields
+        order.order_type = {
+          trigger: {
+            isMarket: true,
+            triggerPx: request.price, // You may need to adjust this depending on API requirements
+            tpsl: "sl",
+          },
+        };
+      } else {
+        // For limit orders
+        order.order_type = {
+          limit: { tif: "Gtc" },
+        };
+      }
+
+      const response = await this.sdk.exchange.placeOrder(order);
 
       console.log(
         `🔍 Raw Hyperliquid API response:`,

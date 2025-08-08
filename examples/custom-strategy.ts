@@ -469,9 +469,9 @@ async function keepAlive(bot: TradingBot): Promise<void> {
 // Show startup banner
 console.log(`
 ╔═══════════════════════════════════════╗
-║           HyperBot v1.0.0             ║
+║           Nimbus v1.0.0               ║
 ║        Custom Strategy Example        ║
-║   "Build Your Own Trading Logic"     ║
+║   "Build Your Own Trading Logic"      ║
 ║     Mean Reversion + Momentum         ║
 ╚═══════════════════════════════════════╝
 `);

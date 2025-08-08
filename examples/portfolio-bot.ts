@@ -267,7 +267,7 @@ async function keepAlive(bot: TradingBot): Promise<void> {
 // Show startup banner
 console.log(`
 ╔═══════════════════════════════════════╗
-║           HyperBot v1.0.0             ║
+║           Nimbus v1.0.0               ║
 ║       Portfolio Rebalancing Bot       ║
 ║     "Don't put all eggs in one        ║
 ║         basket" - Automated           ║

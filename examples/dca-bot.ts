@@ -51,10 +51,10 @@ async function runDCABot() {
       stopLoss: 15, // 15% stop loss (optional for DCA)
       metadata: {
         // DCA-specific configuration
-        interval_hours: 24, // Buy every 24 hours
+        interval_hours: 10 / 3600, // Buy every 10 seconds (10 seconds / 3600 seconds per hour)
         order_size: 50, // $50 per purchase
         max_orders: 20, // Maximum 20 orders total
-        max_daily_orders: 1, // Maximum 1 order per day
+        max_daily_orders: 5, // Maximum 1 order per day
         min_order_size: 25, // Minimum $25 per order
         max_order_size: 100, // Maximum $100 per order
 
@@ -87,7 +87,7 @@ async function runDCABot() {
     await bot.start();
 
     console.log("✅ DCA bot is now running!");
-    console.log("📈 Will buy $50 worth of BTC every 24 hours");
+    console.log("📈 Will buy $50 worth of BTC every 10 seconds");
     console.log("⏹️ Press Ctrl+C to stop the bot");
 
     // Show DCA schedule
@@ -160,7 +160,7 @@ function setupEventListeners(bot: TradingBot) {
 
 function showDCASchedule() {
   console.log("\n📅 DCA Schedule:");
-  console.log("   Frequency: Every 24 hours");
+  console.log("   Frequency: Every 10 seconds");
   console.log("   Amount: $50 per purchase");
   console.log("   Target: Accumulate BTC over time");
   console.log("   Strategy: Buy regardless of price");
@@ -168,7 +168,7 @@ function showDCASchedule() {
   // Calculate next few purchase times
   const now = new Date();
   for (let i = 1; i <= 5; i++) {
-    const nextPurchase = new Date(now.getTime() + i * 24 * 60 * 60 * 1000);
+    const nextPurchase = new Date(now.getTime() + i * 10 * 1000);
     console.log(`   Purchase ${i}: ${nextPurchase.toLocaleString()}`);
   }
   console.log("");
@@ -208,7 +208,7 @@ async function keepAlive(bot: TradingBot): Promise<void> {
 // Show startup banner
 console.log(`
 ╔═══════════════════════════════════════╗
-║           HyperBot v1.0.0             ║
+║           Nimbus v1.0.0               ║
 ║         DCA Bot Example               ║
 ║      "Time in market beats            ║
 ║       timing the market"              ║

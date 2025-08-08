@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * HyperBot Interactive CLI
+ * Nimbus Interactive CLI
  *
  * A production-ready command line interface for creating, configuring,
  * and managing trading bots with interactive prompts and validation.
@@ -38,10 +38,10 @@ interface CLIConfig {
   };
 }
 
-class HyperBotCLI {
+class NimbusCLI {
   private rl: ReturnType<typeof createInterface>;
   private config: Partial<CLIConfig> = {};
-  private configDir = join(process.cwd(), ".hyperbot");
+  private configDir = join(process.cwd(), ".nimbus");
   private configFile = join(this.configDir, "config.json");
 
   constructor() {
@@ -65,11 +65,11 @@ class HyperBotCLI {
   private showBanner() {
     console.log(`
 ╔══════════════════════════════════════════════════════════════╗
-║                     🤖 HyperBot CLI v1.0.0                  ║
+║                     🤖 Nimbus CLI v1.0.0                     ║
 ║               Production-Ready Trading Bot System            ║
 ╠══════════════════════════════════════════════════════════════╣
-║  • Grid Trading      • DCA Strategy      • Portfolio Mgmt   ║
-║  • Martingale        • Risk Management   • Multi-Exchange   ║
+║  • Grid Trading      • DCA Strategy      • Portfolio Mgmt    ║
+║  • Martingale        • Risk Management   • Multi-Exchange    ║
 ╚══════════════════════════════════════════════════════════════╝
 `);
   }
@@ -653,7 +653,7 @@ class HyperBotCLI {
 
   private async showHelp() {
     console.log(`
-📖 HyperBot CLI Help
+📖 Nimbus CLI Help
 ====================
 
 🎯 Getting Started:
@@ -755,7 +755,7 @@ class HyperBotCLI {
 // CLI Entry point
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
 if (isMainModule) {
-  const cli = new HyperBotCLI();
+  const cli = new NimbusCLI();
 
   cli.start().catch((error) => {
     console.error("❌ CLI Error:", error);
@@ -769,4 +769,4 @@ if (isMainModule) {
   });
 }
 
-export { HyperBotCLI };
+export { NimbusCLI };
