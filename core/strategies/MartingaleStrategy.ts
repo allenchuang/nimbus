@@ -1,5 +1,5 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
-import { IExchange, OrderFill, OrderRequest } from "../../interfaces/IExchange";
+import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
 
 // Local type definitions to match our MVP schema
@@ -263,12 +263,16 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
     if (totalPotentialInvestment > maxPositionValue) {
       console.warn(
-        `⚠️ Total potential investment ($${totalPotentialInvestment.toFixed(2)}) exceeds max position limit ($${maxPositionValue.toFixed(2)})`
+        `⚠️ Total potential investment ($${totalPotentialInvestment.toFixed(
+          2
+        )}) exceeds max position limit ($${maxPositionValue.toFixed(2)})`
       );
     }
 
     console.log(
-      `💡 Martingale Config: Max potential investment: $${totalPotentialInvestment.toFixed(2)} (${config.max_orders} orders)`
+      `💡 Martingale Config: Max potential investment: $${totalPotentialInvestment.toFixed(
+        2
+      )} (${config.max_orders} orders)`
     );
   }
 
@@ -334,7 +338,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
     if (currentPrice <= dropThreshold) {
       console.log(
-        `🔻 Entry trigger activated! Price dropped ${dropPercentage}% from $${referencePrice.toFixed(2)} to $${currentPrice.toFixed(2)}`
+        `🔻 Entry trigger activated! Price dropped ${dropPercentage}% from $${referencePrice.toFixed(
+          2
+        )} to $${currentPrice.toFixed(2)}`
       );
 
       await this.executeEntryOrder(currentPrice);
@@ -357,7 +363,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
       const orderSize = orderSizeUSD / currentPrice;
 
       console.log(
-        `📝 Placing Martingale order #${orderNumber}: $${orderSizeUSD} (${orderSize.toFixed(6)} ${this.config.symbol})`
+        `📝 Placing Martingale order #${orderNumber}: $${orderSizeUSD} (${orderSize.toFixed(
+          6
+        )} ${this.config.symbol})`
       );
 
       const orderRequest: OrderRequest = {
@@ -427,7 +435,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
     if (currentPrice >= targetPrice) {
       console.log(
-        `🎯 Exit trigger activated! Price reached profit target: $${currentPrice.toFixed(2)} >= $${targetPrice.toFixed(2)}`
+        `🎯 Exit trigger activated! Price reached profit target: $${currentPrice.toFixed(
+          2
+        )} >= $${targetPrice.toFixed(2)}`
       );
 
       await this.executeExitOrder(currentPrice);
@@ -441,7 +451,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
     try {
       console.log(
-        `📝 Placing Martingale exit order: Sell ${this.martingalePosition.total_position.toFixed(6)} ${this.config.symbol}`
+        `📝 Placing Martingale exit order: Sell ${this.martingalePosition.total_position.toFixed(
+          6
+        )} ${this.config.symbol}`
       );
 
       const orderRequest: OrderRequest = {
@@ -510,7 +522,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
     if (totalPotentialInvestment > maxInvestment) {
       console.log(
-        `🛑 Max position limit would be exceeded: $${totalPotentialInvestment.toFixed(2)} > $${maxInvestment.toFixed(2)}`
+        `🛑 Max position limit would be exceeded: $${totalPotentialInvestment.toFixed(
+          2
+        )} > $${maxInvestment.toFixed(2)}`
       );
       return false;
     }
@@ -544,10 +558,14 @@ export class MartingaleStrategy extends BaseTradingStrategy {
         (1 + this.martingaleConfig.exit_strategy.profit_percentage / 100);
 
       console.log(
-        `📊 Martingale position updated: ${totalPosition.toFixed(6)} ${this.config.symbol}`
+        `📊 Martingale position updated: ${totalPosition.toFixed(6)} ${
+          this.config.symbol
+        }`
       );
       console.log(
-        `💵 Total invested: $${totalInvested.toFixed(2)}, Avg entry: $${position.average_entry_price.toFixed(2)}`
+        `💵 Total invested: $${totalInvested.toFixed(
+          2
+        )}, Avg entry: $${position.average_entry_price.toFixed(2)}`
       );
       console.log(
         `🎯 Profit target: $${position.profit_target_price.toFixed(2)}`
@@ -609,7 +627,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
       if (currentPrice <= stopLossPrice) {
         console.log(
-          `🛑 Stop loss triggered! Current: $${currentPrice}, Stop: $${stopLossPrice.toFixed(2)}, Avg Entry: $${position.average_entry_price.toFixed(2)}`
+          `🛑 Stop loss triggered! Current: $${currentPrice}, Stop: $${stopLossPrice.toFixed(
+            2
+          )}, Avg Entry: $${position.average_entry_price.toFixed(2)}`
         );
 
         this.emit("stopLossTriggered", {
@@ -633,7 +653,9 @@ export class MartingaleStrategy extends BaseTradingStrategy {
 
       if (currentPrice >= takeProfitPrice) {
         console.log(
-          `🎯 Risk management take profit triggered! Current: $${currentPrice}, Target: $${takeProfitPrice.toFixed(2)}`
+          `🎯 Risk management take profit triggered! Current: $${currentPrice}, Target: $${takeProfitPrice.toFixed(
+            2
+          )}`
         );
 
         this.emit("takeProfitTriggered", {

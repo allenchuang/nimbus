@@ -1,5 +1,5 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
-import { IExchange, OrderFill, OrderRequest } from "../../interfaces/IExchange";
+import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
 
 // Local type definitions to match our MVP schema
@@ -147,7 +147,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     this.initializeAssetPositions();
 
     console.log(
-      `📊 Portfolio Strategy created for ${Object.keys(this.portfolioConfig.target_allocations).length} assets`,
+      `📊 Portfolio Strategy created for ${
+        Object.keys(this.portfolioConfig.target_allocations).length
+      } assets`,
       {
         primary_symbol: this.primarySymbol,
         rebalance_threshold: this.portfolioConfig.rebalance_threshold,
@@ -200,7 +202,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
 
   async initialize(): Promise<void> {
     console.log(
-      `🚀 Initializing Portfolio Strategy for ${Object.keys(this.portfolioConfig.target_allocations).length} assets...`
+      `🚀 Initializing Portfolio Strategy for ${
+        Object.keys(this.portfolioConfig.target_allocations).length
+      } assets...`
     );
     console.log(`📌 Primary symbol: ${this.primarySymbol}`);
 
@@ -235,7 +239,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
 
     console.log(`🤖 Starting Portfolio Trading Strategy...`);
     console.log(
-      `📊 Managing ${Object.keys(this.portfolioConfig.target_allocations).length} assets:`
+      `📊 Managing ${
+        Object.keys(this.portfolioConfig.target_allocations).length
+      } assets:`
     );
 
     for (const [symbol, allocation] of Object.entries(
@@ -245,7 +251,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     }
 
     console.log(
-      `⚖️ Rebalance threshold: ${(this.portfolioConfig.rebalance_threshold * 100).toFixed(1)}%`
+      `⚖️ Rebalance threshold: ${(
+        this.portfolioConfig.rebalance_threshold * 100
+      ).toFixed(1)}%`
     );
     console.log(
       `⏰ Rebalance interval: ${this.portfolioConfig.rebalance_interval} hours`
@@ -333,7 +341,9 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     );
     if (Math.abs(totalAllocation - 1.0) > 0.001) {
       throw new Error(
-        `Target allocations must sum to 1.0, current sum: ${totalAllocation.toFixed(4)}`
+        `Target allocations must sum to 1.0, current sum: ${totalAllocation.toFixed(
+          4
+        )}`
       );
     }
 
@@ -349,13 +359,17 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     for (const [symbol, allocation] of Object.entries(allocations)) {
       if (allocation < 0.05 || allocation > 0.8) {
         console.warn(
-          `⚠️ ${symbol} allocation (${(allocation * 100).toFixed(1)}%) is outside recommended range (5%-80%)`
+          `⚠️ ${symbol} allocation (${(allocation * 100).toFixed(
+            1
+          )}%) is outside recommended range (5%-80%)`
         );
       }
     }
 
     console.log(
-      `✅ Portfolio configuration validated: ${assetCount} assets, total allocation: ${(totalAllocation * 100).toFixed(1)}%`
+      `✅ Portfolio configuration validated: ${assetCount} assets, total allocation: ${(
+        totalAllocation * 100
+      ).toFixed(1)}%`
     );
   }
 
@@ -379,18 +393,15 @@ export class PortfolioStrategy extends BaseTradingStrategy {
 
   private startRebalanceChecking(): void {
     // Check for rebalancing needs every 5 minutes
-    this.rebalanceCheckInterval = setInterval(
-      async () => {
-        if (!this.isRunning || this.isProcessingRebalance) return;
+    this.rebalanceCheckInterval = setInterval(async () => {
+      if (!this.isRunning || this.isProcessingRebalance) return;
 
-        try {
-          await this.checkRebalanceNeed();
-        } catch (error) {
-          console.error(`❌ Error checking rebalance need: ${error}`);
-        }
-      },
-      5 * 60 * 1000
-    ); // 5 minutes
+      try {
+        await this.checkRebalanceNeed();
+      } catch (error) {
+        console.error(`❌ Error checking rebalance need: ${error}`);
+      }
+    }, 5 * 60 * 1000); // 5 minutes
 
     console.log(`⚖️ Rebalance monitoring started (5min intervals)`);
   }
@@ -483,13 +494,19 @@ export class PortfolioStrategy extends BaseTradingStrategy {
 
     if (timeSinceLastRebalance < intervalMs) {
       console.log(
-        `⏰ Rebalance needed (drift: ${(maxDrift * 100).toFixed(2)}%) but waiting for interval (${Math.round((intervalMs - timeSinceLastRebalance) / 1000 / 60)} min remaining)`
+        `⏰ Rebalance needed (drift: ${(maxDrift * 100).toFixed(
+          2
+        )}%) but waiting for interval (${Math.round(
+          (intervalMs - timeSinceLastRebalance) / 1000 / 60
+        )} min remaining)`
       );
       return;
     }
 
     console.log(
-      `⚖️ Rebalancing triggered: max drift ${(maxDrift * 100).toFixed(2)}% > threshold ${(threshold * 100).toFixed(2)}%`
+      `⚖️ Rebalancing triggered: max drift ${(maxDrift * 100).toFixed(
+        2
+      )}% > threshold ${(threshold * 100).toFixed(2)}%`
     );
 
     await this.executeRebalance("drift_threshold");
@@ -523,7 +540,11 @@ export class PortfolioStrategy extends BaseTradingStrategy {
           };
 
           console.log(
-            `📝 Placing rebalance order: ${order.side} ${order.target_amount.toFixed(6)} ${order.symbol} (~$${order.estimated_usd_value.toFixed(2)})`
+            `📝 Placing rebalance order: ${
+              order.side
+            } ${order.target_amount.toFixed(6)} ${
+              order.symbol
+            } (~$${order.estimated_usd_value.toFixed(2)})`
           );
 
           const orderResponse = await this.exchange.placeOrder(orderRequest);
@@ -628,7 +649,13 @@ export class PortfolioStrategy extends BaseTradingStrategy {
     asset.current_value_usd = asset.current_amount * fill.price;
 
     console.log(
-      `📊 ${fill.symbol} position updated: ${asset.current_amount.toFixed(6)} (${((asset.current_value_usd / this.portfolioPosition.total_portfolio_value) * 100).toFixed(1)}%)`
+      `📊 ${fill.symbol} position updated: ${asset.current_amount.toFixed(
+        6
+      )} (${(
+        (asset.current_value_usd /
+          this.portfolioPosition.total_portfolio_value) *
+        100
+      ).toFixed(1)}%)`
     );
   }
 

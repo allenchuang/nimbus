@@ -11,8 +11,23 @@ export interface GridConfig {
   takeProfit?: number; // Take profit percentage
   gridMode?: "arithmetic" | "geometric"; // Grid spacing mode (default: arithmetic)
   activeLevels?: number; // Number of buy/sell grid levels to keep active at once
+  metadata?: {
+    // Bot configuration metadata
+    investment_type?: "usd" | "asset";
+    [key: string]: any; // Allow other metadata properties
+  };
 }
 
+export interface GridLevel {
+  price: number;
+  orderId?: string | number;
+  filled: boolean;
+  size: number;
+  filledSize?: number;
+  side?: "buy" | "sell"; // Added side property for compatibility
+}
+
+// Grid generation types (from utils/types/GridTypes.ts)
 export interface GeneratedGridLevel {
   price: number;
   side: "buy" | "sell";

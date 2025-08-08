@@ -1,4 +1,4 @@
-import { IExchange } from "../../interfaces/IExchange";
+import type { IExchange } from "../../types";
 import { ITradingStrategy, StrategyConfig } from "./ITradingStrategy";
 import { GridStrategy } from "./GridStrategy";
 import { MartingaleStrategy } from "./MartingaleStrategy";

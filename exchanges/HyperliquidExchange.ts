@@ -12,7 +12,7 @@ import {
   Balance,
   Position,
   ExchangeConfig,
-} from "../interfaces/IExchange";
+} from "../types";
 
 // Extended interface for Hyperliquid-specific order fills
 export interface HyperliquidOrderFill extends OrderFill {
@@ -762,8 +762,8 @@ export class HyperliquidExchange extends EventEmitter implements IExchange {
         size === 0
           ? "flat"
           : parseFloat(positionData.szi) > 0
-            ? "long"
-            : "short";
+          ? "long"
+          : "short";
 
       const avgPrice = positionData.entryPx
         ? parseFloat(positionData.entryPx)
@@ -967,7 +967,9 @@ export class HyperliquidExchange extends EventEmitter implements IExchange {
           meta.universe.map((asset: any) => asset.name).join(", ")
         );
         throw new Error(
-          `Asset metadata not found for ${assetName}. Available assets: ${meta.universe.map((asset: any) => asset.name).join(", ")}`
+          `Asset metadata not found for ${assetName}. Available assets: ${meta.universe
+            .map((asset: any) => asset.name)
+            .join(", ")}`
         );
       }
 

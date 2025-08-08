@@ -1,5 +1,5 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
-import { IExchange, OrderFill, OrderRequest } from "../../interfaces/IExchange";
+import type { IExchange, OrderFill, OrderRequest } from "../../types";
 import { HyperliquidOrderFill } from "../../exchanges/HyperliquidExchange";
 // Import types from the workspace
 type DCABotMetadata = {
@@ -262,12 +262,9 @@ export class DCAStrategy extends BaseTradingStrategy {
       this.resetDailyOrderCount();
 
       // Set up daily recurring reset
-      this.dailyResetTimer = setInterval(
-        () => {
-          this.resetDailyOrderCount();
-        },
-        24 * 60 * 60 * 1000
-      ); // 24 hours
+      this.dailyResetTimer = setInterval(() => {
+        this.resetDailyOrderCount();
+      }, 24 * 60 * 60 * 1000); // 24 hours
     }, msUntilMidnight);
   }
 
@@ -424,7 +421,11 @@ export class DCAStrategy extends BaseTradingStrategy {
     this.state.totalPosition = position.current_position;
 
     console.log(
-      `📊 DCA Position updated: ${position.current_position.toFixed(6)} ${this.config.symbol}, avg cost: $${position.average_cost.toFixed(2)}, total orders: ${position.total_orders}`
+      `📊 DCA Position updated: ${position.current_position.toFixed(6)} ${
+        this.config.symbol
+      }, avg cost: $${position.average_cost.toFixed(2)}, total orders: ${
+        position.total_orders
+      }`
     );
   }
 
@@ -444,7 +445,9 @@ export class DCAStrategy extends BaseTradingStrategy {
 
       if (currentPrice <= stopLossPrice) {
         console.log(
-          `🛑 Stop loss triggered! Current: $${currentPrice}, Stop: $${stopLossPrice.toFixed(2)}, Avg Cost: $${position.average_cost.toFixed(2)}`
+          `🛑 Stop loss triggered! Current: $${currentPrice}, Stop: $${stopLossPrice.toFixed(
+            2
+          )}, Avg Cost: $${position.average_cost.toFixed(2)}`
         );
 
         // Emit stop loss event (actual selling would be implemented here)
@@ -464,7 +467,9 @@ export class DCAStrategy extends BaseTradingStrategy {
 
       if (currentPrice >= takeProfitPrice) {
         console.log(
-          `🎯 Take profit triggered! Current: $${currentPrice}, Target: $${takeProfitPrice.toFixed(2)}, Avg Cost: $${position.average_cost.toFixed(2)}`
+          `🎯 Take profit triggered! Current: $${currentPrice}, Target: $${takeProfitPrice.toFixed(
+            2
+          )}, Avg Cost: $${position.average_cost.toFixed(2)}`
         );
 
         // Emit take profit event (actual selling would be implemented here)

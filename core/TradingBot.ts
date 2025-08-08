@@ -1,12 +1,13 @@
 import { EventEmitter } from "events";
-import { IExchange, OrderFill } from "../interfaces/IExchange";
-import { HyperliquidOrderFill } from "../exchanges/HyperliquidExchange";
-import {
+import type {
+  IExchange,
+  OrderFill,
   GridConfig,
   GridState,
   TradeMetricsLogger,
   OrderMetadataUpdater,
-} from "./types/BotTypes";
+  HyperliquidOrderFill,
+} from "../types";
 import {
   ITradingStrategy,
   StrategyConfig,

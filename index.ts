@@ -20,38 +20,8 @@ export { PortfolioStrategy } from "./core/strategies/PortfolioStrategy";
 
 // Grid level generation utilities are now in @hyperliquid-bot/utils package
 
-// Types
-export {
-  GridConfig,
-  GridLevel,
-  GridState,
-  VolumeMetrics,
-  TradeMetricsLogger,
-  OrderMetadataUpdater,
-  BotConfiguration,
-  BotStatus,
-  CreateBotRequest,
-  ExchangeConfiguration,
-  BotError,
-} from "./core/types/BotTypes";
-
-// Exchange interfaces and types
-export {
-  IExchange,
-  OrderRequest,
-  OrderResponse,
-  CancelOrderRequest,
-  CancelOrderResponse,
-  OpenOrder,
-  OrderFill,
-  PriceUpdate,
-  Balance,
-  Position,
-  ExchangeConfig,
-} from "./interfaces/IExchange";
-
-// Hyperliquid-specific types
-export { HyperliquidOrderFill } from "./exchanges/HyperliquidExchange";
+// All types are now exported from the consolidated types folder
+export type * from "./types";
 
 // Exchange implementations
 export {

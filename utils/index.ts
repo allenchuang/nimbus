@@ -3,7 +3,7 @@ export {
   type GridConfig,
   type GeneratedGridLevel,
   type GridGenerationResult,
-} from "./types/GridTypes";
+} from "../types";
 
 // Grid utilities
 export {
@@ -18,6 +18,4 @@ export {
   calculateGridOrderSize,
   calculateMartingaleOrderSize,
   roundToDecimals,
-  type OrderSizeConfig,
-  type OrderSizeResult,
 } from "./trading/OrderSizeCalculator";

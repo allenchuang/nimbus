@@ -1,4 +1,4 @@
-import { GridConfig, GridLevel } from "../types/BotTypes.js";
+import type { GridConfig, GridLevel } from "../../types";
 
 export class GridLevelManager {
   private config: GridConfig;
@@ -58,7 +58,11 @@ export class GridLevelManager {
     levels.sort((a, b) => a.price - b.price);
 
     console.log(
-      `📊 Created ${levels.filter((l) => l.side === "buy").length} buy levels and ${levels.filter((l) => l.side === "sell").length} sell levels`
+      `📊 Created ${
+        levels.filter((l) => l.side === "buy").length
+      } buy levels and ${
+        levels.filter((l) => l.side === "sell").length
+      } sell levels`
     );
 
     this.logGridLevels(levels);

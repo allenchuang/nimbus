@@ -1,21 +1,15 @@
 import { BaseTradingStrategy, StrategyConfig } from "./ITradingStrategy";
-import {
-  IExchange,
-  OrderFill,
-  CancelOrderRequest,
-} from "../../interfaces/IExchange";
+import { IExchange, OrderFill, CancelOrderRequest } from "../../types";
 import {
   HyperliquidExchange,
   HyperliquidOrderFill,
 } from "../../exchanges/HyperliquidExchange";
-import { GridConfig, GridLevel } from "../types/BotTypes";
 import {
   generateGridLevels,
   getDeterministicActiveLevels,
   calculateGridOrderSize,
   type GeneratedGridLevel,
   type GridGenerationResult,
-  type OrderSizeResult,
 } from "../../utils";
 
 interface GridStrategyConfig extends StrategyConfig {

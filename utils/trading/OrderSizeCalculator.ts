@@ -1,17 +1,4 @@
-export interface OrderSizeConfig {
-  investmentAmount: number;
-  investmentType?: "usd" | "asset";
-  gridQuantity?: number;
-  currentPrice: number;
-  symbol: string;
-  szDecimals?: number;
-}
-
-export interface OrderSizeResult {
-  orderSize: number;
-  totalBaseAmount: number;
-  calculationDetails: string;
-}
+import type { OrderSizeConfig, OrderSizeResult } from "../../types";
 
 /**
  * Calculate order size based on investment type and configuration
@@ -32,7 +19,9 @@ export function calculateOrderSize(config: OrderSizeConfig): OrderSizeResult {
   if (investmentType === "usd") {
     // Convert USD investment to base asset using current price
     totalBaseAmount = investmentAmount / currentPrice;
-    calculationDetails = `$${investmentAmount} USD / $${currentPrice} = ${totalBaseAmount.toFixed(6)} ${symbol}`;
+    calculationDetails = `$${investmentAmount} USD / $${currentPrice} = ${totalBaseAmount.toFixed(
+      6
+    )} ${symbol}`;
   } else {
     // Investment amount is already in base asset
     totalBaseAmount = investmentAmount;

@@ -2,7 +2,7 @@ import {
   GridConfig,
   GeneratedGridLevel,
   GridGenerationResult,
-} from "../types/GridTypes";
+} from "../../types";
 
 /**
  * Deterministic grid level generator

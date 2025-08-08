@@ -1,4 +1,4 @@
-import { IExchange, ExchangeConfig } from "../interfaces/IExchange";
+import type { IExchange, ExchangeConfig } from "../types";
 import {
   HyperliquidExchange,
   HyperliquidConfig,
