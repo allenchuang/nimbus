@@ -1,4 +1,4 @@
-# Nimbus - Production-Ready Automated Trading System
+# Nimbus - Open, modular, lightweight framework for trading automation
 
 [![npm version](https://badge.fury.io/js/%40hyperliquid-bot%2Fhyper-bot.svg)](https://badge.fury.io/js/%40hyperliquid-bot%2Fhyper-bot)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
@@ -10,7 +10,7 @@ A professional-grade, modular trading bot system with advanced strategies and ro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Nimbus System                              │
+│                      Nimbus Engine                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────────────┐  │
 │  │ TradingBot  │    │ Strategies  │    │   Risk Management   │  │
@@ -65,13 +65,13 @@ A professional-grade, modular trading bot system with advanced strategies and ro
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @hyperliquid-bot/hyper-bot
+pnpm add @allenchuang/nimbus
 
 # Using npm
-npm install @hyperliquid-bot/hyper-bot
+npm install @allenchuang/nimbus
 
 # Using yarn
-yarn add @hyperliquid-bot/hyper-bot
+yarn add @allenchuang/nimbus
 ```
 
 ### Environment Setup
@@ -86,60 +86,8 @@ cp .env.example .env
 #### Required Environment Variables
 
 ```bash
-# =============================================================================
-# HYPERLIQUID EXCHANGE CREDENTIALS (REQUIRED)
-# =============================================================================
-
-# Your Hyperliquid wallet address (required)
 HYPERLIQUID_WALLET_ADDRESS=0x1234567890123456789012345678901234567890
-
-# Your private key for signing transactions (required)
-# ⚠️  SECURITY: Never commit this to version control!
 HYPERLIQUID_PRIVATE_KEY=0x1234567890123456789012345678901234567890123456789012345678901234
-```
-
-That's it! The bot will work with just these two required variables. All other settings (testnet, WebSocket, investment amounts, risk management) are configured directly in your bot code.
-
-#### Security Best Practices
-
-⚠️ **CRITICAL SECURITY NOTES:**
-
-1. **Never commit your `.env` file** to version control
-2. **Use testnet first** - Set `HYPERLIQUID_TESTNET=true` for testing
-3. **Secure your private key** - Consider using hardware wallets or secure key management
-4. **Use environment-specific files** - `.env.development`, `.env.production`
-5. **Rotate keys regularly** - Update your credentials periodically
-
-#### Getting Your Hyperliquid Credentials
-
-1. **Wallet Address**: Your Ethereum wallet address
-
-   ```bash
-   # Example format
-   HYPERLIQUID_WALLET_ADDRESS=0x742d35Cc6634C0532925a3b8D66dE3C64AC67F2B
-   ```
-
-2. **Private Key**: Export from your wallet (MetaMask, etc.)
-
-   ```bash
-   # Example format (64 characters after 0x)
-   HYPERLIQUID_PRIVATE_KEY=0x1234567890abcdef...
-   ```
-
-3. **Testnet Setup**: For testing without real funds
-   ```bash
-   # Use the same credentials, but configure testnet in your bot code
-   HYPERLIQUID_WALLET_ADDRESS=0x...  # Your testnet address
-   HYPERLIQUID_PRIVATE_KEY=0x...     # Your testnet private key
-   ```
-
-#### Environment File Examples
-
-**Example `.env` file:**
-
-```bash
-HYPERLIQUID_WALLET_ADDRESS=0x742d35Cc6634C0532925a3b8D66dE3C64AC67F2B
-HYPERLIQUID_PRIVATE_KEY=0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
 ```
 
 #### Loading Environment Variables
@@ -166,7 +114,7 @@ import {
   ExchangeFactory,
   BOT_TYPE,
   TradingBotConfig,
-} from "@hyperliquid-bot/hyper-bot";
+} from "@allenchuang/nimbus";
 
 // Load environment variables
 dotenv.config();
@@ -217,6 +165,50 @@ process.on("SIGINT", async () => {
   await bot.stop();
   process.exit(0);
 });
+```
+
+That's it! The bot will work with just these two required variables. All other settings (testnet, WebSocket, investment amounts, risk management) are configured directly in your bot code.
+
+#### Security Best Practices
+
+⚠️ **CRITICAL SECURITY NOTES:**
+
+1. **Never commit your `.env` file** to version control
+2. **Use testnet first** - Set `HYPERLIQUID_TESTNET=true` for testing
+3. **Secure your private key** - Consider using hardware wallets or secure key management
+4. **Use environment-specific files** - `.env.development`, `.env.production`
+5. **Rotate keys regularly** - Update your credentials periodically
+
+#### Getting Your Hyperliquid Credentials
+
+1. **Wallet Address**: Your Ethereum wallet address
+
+   ```bash
+   # Example format
+   HYPERLIQUID_WALLET_ADDRESS=0x742d35Cc6634C0532925a3b8D66dE3C64AC67F2B
+   ```
+
+2. **Private Key**: Export from your wallet (MetaMask, etc.)
+
+   ```bash
+   # Example format (64 characters after 0x)
+   HYPERLIQUID_PRIVATE_KEY=0x1234567890abcdef...
+   ```
+
+3. **Testnet Setup**: For testing without real funds
+   ```bash
+   # Use the same credentials, but configure testnet in your bot code
+   HYPERLIQUID_WALLET_ADDRESS=0x...  # Your testnet address
+   HYPERLIQUID_PRIVATE_KEY=0x...     # Your testnet private key
+   ```
+
+#### Environment File Examples
+
+**Example `.env` file:**
+
+```bash
+HYPERLIQUID_WALLET_ADDRESS=0x742d35Cc6634C0532925a3b8D66dE3C64AC67F2B
+HYPERLIQUID_PRIVATE_KEY=0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
 ```
 
 ## 🎯 Bot Type Constants
