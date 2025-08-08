@@ -1,6 +1,6 @@
 # Examples
 
-This folder contains complete, runnable examples for different trading strategies organized by strategy type.
+This folder contains complete, runnable examples for different trading strategies.
 
 ## 🚀 Quick Start
 
@@ -20,20 +20,20 @@ This folder contains complete, runnable examples for different trading strategie
 
 3. **Run an example**:
    ```bash
-   pnpm tsx examples/grid/basic-grid-bot.ts
+   pnpm tsx examples/basic-grid-bot.ts
    ```
 
-## �� Available Examples
+## 📁 Available Examples
 
-| File                            | Strategy   | Difficulty   | Description                          |
-| ------------------------------- | ---------- | ------------ | ------------------------------------ |
-| `/grid/basic-grid-bot.ts`       | Grid       | Beginner     | Simple grid trading setup            |
-| `/grid/advanced-grid-bot.ts`    | Grid       | Intermediate | Advanced grid with geometric spacing |
-| `/dca/dca-bot.ts`               | DCA        | Beginner     | Dollar cost averaging                |
-| `/martingale/martingale-bot.ts` | Martingale | Advanced     | Martingale strategy (HIGH RISK)      |
-| `/portfolio/portfolio-bot.ts`   | Portfolio  | Intermediate | Portfolio rebalancing                |
-| `/mixed/multi-strategy.ts`      | Mixed      | Advanced     | Running multiple strategies          |
-| `/custom/custom-strategy.ts`    | Custom     | Expert       | Creating custom strategies           |
+| File                   | Strategy   | Difficulty   | Description                          |
+| ---------------------- | ---------- | ------------ | ------------------------------------ |
+| `basic-grid-bot.ts`    | Grid       | Beginner     | Simple grid trading setup            |
+| `advanced-grid-bot.ts` | Grid       | Intermediate | Advanced grid with geometric spacing |
+| `dca-bot.ts`           | DCA        | Beginner     | Dollar cost averaging                |
+| `martingale-bot.ts`    | Martingale | Advanced     | Martingale strategy (HIGH RISK)      |
+| `portfolio-bot.ts`     | Portfolio  | Intermediate | Portfolio rebalancing                |
+| `multi-strategy.ts`    | Mixed      | Advanced     | Running multiple strategies          |
+| `custom-strategy.ts`   | Custom     | Expert       | Creating custom strategies           |
 
 ## ⚙️ Configuration
 
@@ -64,36 +64,36 @@ TELEGRAM_CHAT_ID=...
 
 ```bash
 # Grid strategies
-pnpm tsx examples/grid/basic-grid-bot.ts
-pnpm tsx examples/grid/advanced-grid-bot.ts
+pnpm tsx examples/basic-grid-bot.ts
+pnpm tsx examples/advanced-grid-bot.ts
 
 # DCA strategies
-pnpm tsx examples/dca/dca-bot.ts
+pnpm tsx examples/dca-bot.ts
 
-# Martingale strategies (⚠️ HIGH RISK)
-pnpm tsx examples/martingale/martingale-bot.ts
+# Martingale strategies (HIGH RISK)
+pnpm tsx examples/martingale-bot.ts
 
 # Portfolio strategies
-pnpm tsx examples/portfolio/portfolio-bot.ts
+pnpm tsx examples/portfolio-bot.ts
 
 # Multi-strategy
-pnpm tsx examples/mixed/multi-strategy.ts
+pnpm tsx examples/multi-strategy.ts
 
 # Custom strategies
-pnpm tsx examples/custom/custom-strategy.ts
+pnpm tsx examples/custom-strategy.ts
 ```
 
 ### Production Mode
 
 ```bash
 pnpm build
-node dist/examples/grid/basic-grid-bot.js
+node dist/examples/basic-grid-bot.js
 ```
 
 ### With Custom Config
 
 ```bash
-CONFIG_FILE=./config/my-config.json pnpm tsx examples/grid/basic-grid-bot.ts
+CONFIG_FILE=./config/my-config.json pnpm tsx examples/basic-grid-bot.ts
 ```
 
 ## 📊 Strategy Overview
@@ -172,14 +172,13 @@ All examples include:
 - Check the main README for detailed documentation
 - Join our Discord community
 - Open an issue on GitHub
-- Review strategy-specific documentation in each folder
 
 ## 📚 Learning Path
 
-1. **Start**: Basic Grid Bot (`/grid/basic-grid-bot.ts`)
-2. **Learn**: DCA Bot (`/dca/dca-bot.ts`)
-3. **Advance**: Advanced Grid (`/grid/advanced-grid-bot.ts`)
-4. **Diversify**: Portfolio Bot (`/portfolio/portfolio-bot.ts`)
-5. **Scale**: Multi-Strategy (`/mixed/multi-strategy.ts`)
-6. **Create**: Custom Strategy (`/custom/custom-strategy.ts`)
-7. **⚠️ Avoid until experienced**: Martingale (`/martingale/martingale-bot.ts`)
+1. **Start**: Basic Grid Bot (`basic-grid-bot.ts`)
+2. **Learn**: DCA Bot (`dca-bot.ts`)
+3. **Advance**: Advanced Grid (`advanced-grid-bot.ts`)
+4. **Diversify**: Portfolio Bot (`portfolio-bot.ts`)
+5. **Scale**: Multi-Strategy (`multi-strategy.ts`)
+6. **Create**: Custom Strategy (`custom-strategy.ts`)
+7. **⚠️ Avoid until experienced**: Martingale (`martingale-bot.ts`)

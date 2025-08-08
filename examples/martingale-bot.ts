@@ -17,7 +17,7 @@ import {
   BotType,
   BOT_TYPE,
   TradingBotConfig,
-} from "../../index.js";
+} from "../index.js";
 
 // Load environment variables
 config();

@@ -18,7 +18,7 @@ export { MartingaleStrategy } from "./core/strategies/MartingaleStrategy";
 export { DCAStrategy } from "./core/strategies/DCAStrategy";
 export { PortfolioStrategy } from "./core/strategies/PortfolioStrategy";
 
-// Grid level generation utilities are now in @hyperliquid-bot/utils package
+// Grid level generation utilities are now in utils folder
 
 // All types are now exported from the consolidated types folder
 export type * from "./types";
